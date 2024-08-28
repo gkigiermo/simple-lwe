@@ -1,3 +1,6 @@
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct LweParameters {
     pub plaintext_modulus: u32,
     pub ciphertext_modulus: u32,

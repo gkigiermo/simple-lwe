@@ -4,7 +4,9 @@ use rand::Rng;
 use rand_distr::{Normal, Distribution};
 use std::io::Write;
 use std::io::Read;
+use serde::{Serialize, Deserialize};
 
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Lwe{
     pub ciphertext: Vec<u128>,
     secret_key: Vec<u32>,

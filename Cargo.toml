@@ -6,9 +6,9 @@ edition = "2021"
 [dependencies]
 rand = "0.8"
 rand_distr = "0.4"
+serde = { version = "1.0", features = ["derive"] }
 
 [lib]
 name = "simple_lwe"
 path = "src/lib.rs"
-
 
