@@ -108,13 +108,16 @@ impl Lwe {
             self.ciphertext[i] *= scalar as u128;
         }  
     }
-
-    pub fn export_to_file(&self, filename: &str) {
+    pub fn export_ciphertext_to_file(&self, filename: &str) {
         let ct_filename = filename.to_owned() + ".ct";
         let mut ct_file = std::fs::File::create(ct_filename).unwrap();
         for i in 0..self.lwe_size {
             ct_file.write_all(self.ciphertext[i].to_le_bytes().as_ref()).unwrap();
         }
+    }
+
+    pub fn export_to_file(&self, filename: &str) {
+        self.export_ciphertext_to_file(filename);
 
         let sk_filename = filename.to_owned() + ".sk";
         let mut ct_file = std::fs::File::create(sk_filename).unwrap();
@@ -122,25 +125,33 @@ impl Lwe {
             ct_file.write_all(self.secret_key[i].to_le_bytes().as_ref()).unwrap();
         }
     }
-
-    pub fn import_from_file(&mut self, filename: &str) {
+    
+    pub fn import_ciphertext_from_file(&mut self, filename: &str) {
         let ct_filename = filename.to_owned() + ".ct";
         let mut ct_file = std::fs::File::open(ct_filename).unwrap();
-        for i in 0..self.lwe_size {
+        for _i in 0..self.lwe_size {
             let mut buffer = [0u8; 16];
             ct_file.read_exact(&mut buffer).unwrap();
             self.ciphertext.push(u128::from_le_bytes(buffer));
         }
+    }
 
+    pub fn import_secret_key_from_file(&mut self, filename: &str) {
         let sk_filename = filename.to_owned() + ".sk";
         let mut ct_file = std::fs::File::open(sk_filename).unwrap();
         self.secret_key.clear();
-        for i in 0..self.lwe_size - 1 {
+        for _i in 0..self.lwe_size - 1 {
             let mut buffer = [0u8; 4];
             ct_file.read_exact(&mut buffer).unwrap();
             self.secret_key.push(u32::from_le_bytes(buffer));
         }
     }
+
+    pub fn import_from_file(&mut self, filename: &str) {
+        self.import_ciphertext_from_file(filename);
+        self.import_secret_key_from_file(filename);
+    }
+
 
 }
 
