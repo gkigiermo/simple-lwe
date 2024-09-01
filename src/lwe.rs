@@ -98,16 +98,18 @@ impl Lwe {
     }
 
     // Here we should push an add in the VM for each element of the ciphertext
+    // We should also push a reduction modulo ciphertext_modulus
     pub fn add(&mut self, lwe: &Lwe) {
         for i in 0..self.lwe_size {
-            self.ciphertext[i] += lwe.ciphertext[i];
+            self.ciphertext[i] = self.ciphertext[i].wrapping_add(lwe.ciphertext[i]);
         }
     }
 
     // Here we should push a multiplication in the VM for each element of the ciphertext
+    // We should also push a reduction modulo ciphertext_modulus
     pub fn small_scalar_mult(&mut self, scalar: u8) {     
         for i in 0..self.lwe_size {
-            self.ciphertext[i] *= scalar as u128;
+            self.ciphertext[i]  = self.ciphertext[i].wrapping_mul(scalar as u128);
         }  
     }
     pub fn export_ciphertext_to_file(&self, filename: &str) {
